@@ -1,7 +1,7 @@
 FROM python:3.10-slim
 
+# System-Dependencies installieren
 RUN apt-get update && apt-get install -y \
-    git \
     ffmpeg \
     libsm6 \
     libxext6 \
@@ -10,15 +10,20 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Arbeitsverzeichnis setzen
 WORKDIR /app
 
-# Clone CVAT from GitHub
-RUN git clone https://github.com/opencv/cvat.git .
+# requirements.txt ins Image kopieren
+COPY requirements.txt .
 
-# Install server dependencies
-WORKDIR /app/cvat
+# Abhängigkeiten installieren
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
+# Projektdateien kopieren (z. B. Django-Projekt etc.)
+COPY . .
+
+# Port öffnen
 EXPOSE 8080
 
+# Startbefehl
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8080"]
