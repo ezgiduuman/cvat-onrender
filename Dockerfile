@@ -2,22 +2,22 @@ FROM python:3.10-slim
 
 RUN apt-get update && apt-get install -y \
     git \
-    curl \
     ffmpeg \
     libsm6 \
     libxext6 \
     libgl1 \
-    libglib2.0-0 && \
-    rm -rf /var/lib/apt/lists/*
+    libglib2.0-0 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Klone das vollständige CVAT-Projekt von GitHub
-RUN git clone https://github.com/opencv/cvat.git /opt/cvat
+WORKDIR /app
 
-WORKDIR /opt/cvat
+# Clone CVAT from GitHub
+RUN git clone https://github.com/opencv/cvat.git .
 
-# Installiere Abhängigkeiten
-RUN pip install --upgrade pip && \
-    pip install -r cvat/requirements.txt
+# Install server dependencies
+WORKDIR /app/cvat
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 EXPOSE 8080
 
