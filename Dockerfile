@@ -10,12 +10,13 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 && \
     rm -rf /var/lib/apt/lists/*
 
+# Klone das vollständige CVAT-Projekt von GitHub
 RUN git clone https://github.com/opencv/cvat.git /opt/cvat
 
 WORKDIR /opt/cvat
 
+# Installiere Abhängigkeiten
 RUN pip install --upgrade pip && \
-    pip install -r requirements/development.txt && \
     pip install -r cvat/requirements.txt
 
 EXPOSE 8080
